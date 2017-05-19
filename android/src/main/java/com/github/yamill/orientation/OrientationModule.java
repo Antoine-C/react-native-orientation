@@ -25,7 +25,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class OrientationModule extends ReactContextBaseJavaModule implements LifecycleEventListener{
+public class OrientationModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
     OrientationEventListener mOrientationEventListener;
     private String previousOrientation = null;
 
@@ -39,21 +39,21 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
                 String mode;
 
-                if(orientation >= 85 || orientation >= 265) {
+                if (orientation >= 85 || orientation >= 265) {
                     mode = ORIENTATION_LANDSCAPE;
                 } else {
                     mode = ORIENTATION_PORTRAIT;
                 }
 
-                if(previousOrientation == null) {
+                if (previousOrientation == null) {
                     previousOrientation = mode;
-                } else if(!previousOrientation.equals(mode)) {
+                } else if (!previousOrientation.equals(mode)) {
                     previousOrientation = mode;
 
                     WritableMap params = Arguments.createMap();
                     params.putString("orientation", mode);
 
-                    if(ctx.hasActiveCatalystInstance()) {
+                    if (ctx.hasActiveCatalystInstance()) {
                         Log.d("Orientation", "Send Event because orientation is now " + mode);
                         mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                                 .emit("OrientationChanged", params);
@@ -62,7 +62,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
             }
         };
 
-        if(mOrientationEventListener.canDetectOrientation()) {
+        if (mOrientationEventListener.canDetectOrientation()) {
             mOrientationEventListener.enable();
         }
 
@@ -133,7 +133,9 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     }
 
     @Override
-    public @Nullable Map<String, Object> getConstants() {
+    public
+    @Nullable
+    Map<String, Object> getConstants() {
         HashMap<String, Object> constants = new HashMap<String, Object>();
         int orientationInt = getReactApplicationContext().getResources().getConfiguration().orientation;
 
@@ -163,6 +165,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     public void onHostResume() {
 
     }
+
     @Override
     public void onHostPause() {
 
@@ -172,3 +175,4 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
     public void onHostDestroy() {
         mOrientationEventListener.disable();
     }
+}
