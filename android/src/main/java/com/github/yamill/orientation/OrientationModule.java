@@ -26,29 +26,46 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 public class OrientationModule extends ReactContextBaseJavaModule implements LifecycleEventListener{
-    final BroadcastReceiver receiver;
+    OrientationEventListener mOrientationEventListener;
+    private String previousOrientation = null;
 
     public OrientationModule(ReactApplicationContext reactContext) {
         super(reactContext);
         final ReactApplicationContext ctx = reactContext;
 
-        receiver = new BroadcastReceiver() {
+        mOrientationEventListener = new OrientationEventListener(mContext) {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                Configuration newConfig = intent.getParcelableExtra("newConfig");
-                Log.d("receiver", String.valueOf(newConfig.orientation));
+            public void onOrientationChanged(int orientation) {
 
-                String orientationValue = newConfig.orientation == 1 ? "PORTRAIT" : "LANDSCAPE";
+                String mode;
 
-                WritableMap params = Arguments.createMap();
-                params.putString("orientation", orientationValue);
-                if (ctx.hasActiveCatalystInstance()) {
-                    ctx
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("orientationDidChange", params);
+                if(orientation >= 85 || orientation >= 265) {
+                    mode = ORIENTATION_LANDSCAPE;
+                } else {
+                    mode = ORIENTATION_PORTRAIT;
+                }
+
+                if(previousOrientation == null) {
+                    previousOrientation = mode;
+                } else if(!previousOrientation.equals(mode)) {
+                    previousOrientation = mode;
+
+                    WritableMap params = Arguments.createMap();
+                    params.putString("orientation", mode);
+
+                    if(ctx.hasActiveCatalystInstance()) {
+                        Log.d("Orientation", "Send Event because orientation is now " + mode);
+                        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("OrientationChanged", params);
+                    }
                 }
             }
         };
+
+        if(mOrientationEventListener.canDetectOrientation()) {
+            mOrientationEventListener.enable();
+        }
+
         ctx.addLifecycleEventListener(this);
     }
 
@@ -144,33 +161,14 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
     @Override
     public void onHostResume() {
-        final Activity activity = getCurrentActivity();
 
-        assert activity != null;
-        activity.registerReceiver(receiver, new IntentFilter("onConfigurationChanged"));
     }
     @Override
     public void onHostPause() {
-        final Activity activity = getCurrentActivity();
-        if (activity == null) return;
-        try
-        {
-            activity.unregisterReceiver(receiver);
-        }
-        catch (java.lang.IllegalArgumentException e) {
-            FLog.e(ReactConstants.TAG, "receiver already unregistered", e);
-        }
+
     }
 
     @Override
     public void onHostDestroy() {
-        final Activity activity = getCurrentActivity();
-        if (activity == null) return;
-        try
-        {
-            activity.unregisterReceiver(receiver);
-        }
-        catch (java.lang.IllegalArgumentException e) {
-            FLog.e(ReactConstants.TAG, "receiver already unregistered", e);
-        }}
+        mOrientationEventListener.disable();
     }
