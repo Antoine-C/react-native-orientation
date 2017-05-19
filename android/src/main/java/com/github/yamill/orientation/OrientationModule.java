@@ -36,7 +36,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
         super(reactContext);
         final ReactApplicationContext ctx = reactContext;
 
-        mOrientationEventListener = new OrientationEventListener(mContext) {
+        mOrientationEventListener = new OrientationEventListener(ctx) {
             @Override
             public void onOrientationChanged(int orientation) {
 
@@ -58,7 +58,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
 
                     if (ctx.hasActiveCatalystInstance()) {
                         Log.d("Orientation", "Send Event because orientation is now " + mode);
-                        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                                 .emit("OrientationChanged", params);
                     }
                 }
