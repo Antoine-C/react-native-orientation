@@ -57,9 +57,8 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
                     params.putString("orientation", mode);
 
                     if (ctx.hasActiveCatalystInstance()) {
-                        Log.d("Orientation", "Send Event because orientation is now " + mode);
                         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                                .emit("OrientationChanged", params);
+                                .emit("orientationDidChange", params);
                     }
                 }
             }
