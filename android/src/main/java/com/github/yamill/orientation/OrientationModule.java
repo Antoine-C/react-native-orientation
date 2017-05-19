@@ -40,17 +40,22 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
             @Override
             public void onOrientationChanged(int orientation) {
 
-                String mode;
+                String mode = "";
 
-                if (orientation >= 85 || orientation >= 265) {
-                    mode = ORIENTATION_LANDSCAPE;
-                } else {
+                // Portrait 280 to 70
+                // Landscape 70 to 280
+                // Anything 360 > && < 10 should not be cared
+
+                if(orientation >= 280 || (orientation >- 10 && orientation <= 70)) {
                     mode = ORIENTATION_PORTRAIT;
+                } else {
+                    mode = ORIENTATION_LANDSCAPE;
                 }
 
                 if (previousOrientation == null) {
                     previousOrientation = mode;
                 } else if (!previousOrientation.equals(mode)) {
+                    Log.d("OrientationModuleFinal", mode);
                     previousOrientation = mode;
 
                     WritableMap params = Arguments.createMap();
