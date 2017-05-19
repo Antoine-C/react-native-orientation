@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 public class OrientationModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+    private static String ORIENTATION_LANDSCAPE = "LANDSCAPE";
+    private static String ORIENTATION_PORTRAIT  = "PORTRAIT";
     OrientationEventListener mOrientationEventListener;
     private String previousOrientation = null;
 
