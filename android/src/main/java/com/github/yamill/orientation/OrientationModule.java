@@ -46,7 +46,7 @@ public class OrientationModule extends ReactContextBaseJavaModule implements Lif
                 // Landscape 70 to 280
                 // Anything 360 > && < 10 should not be cared
 
-                if(orientation >= 280 || (orientation >- 10 && orientation <= 70)) {
+                if(orientation >= 280 || (orientation >= 10 && orientation <= 70)) {
                     mode = ORIENTATION_PORTRAIT;
                 } else {
                     mode = ORIENTATION_LANDSCAPE;
