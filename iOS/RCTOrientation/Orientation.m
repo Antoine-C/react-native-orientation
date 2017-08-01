@@ -3,7 +3,11 @@
 //
 
 #import "Orientation.h"
+#if __has_include(<React/RCTEventDispatcher.h>)
+#import <React/RCTEventDispatcher.h>
+#else
 #import "RCTEventDispatcher.h"
+#endif
 
 @implementation Orientation
 @synthesize bridge = _bridge;
@@ -138,10 +142,10 @@ RCT_EXPORT_METHOD(lockToLandscape)
   }
 }
 
-RCT_EXPORT_METHOD(lockToLandscapeRight)
+RCT_EXPORT_METHOD(lockToLandscapeLeft)
 {
   #if DEBUG
-    NSLog(@"Locked to Landscape Right");
+    NSLog(@"Locked to Landscape Left");
   #endif
     [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
@@ -150,10 +154,10 @@ RCT_EXPORT_METHOD(lockToLandscapeRight)
 
 }
 
-RCT_EXPORT_METHOD(lockToLandscapeLeft)
+RCT_EXPORT_METHOD(lockToLandscapeRight)
 {
   #if DEBUG
-    NSLog(@"Locked to Landscape Left");
+    NSLog(@"Locked to Landscape Right");
   #endif
   [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeRight];
   [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
